@@ -56,7 +56,7 @@ public class JobConfiguration {
     public FlatFileItemWriter<Customer> writer() throws Exception{
         FlatFileItemWriter<Customer> writer = new FlatFileItemWriter<>();
         writer.setLineAggregator(new PassThroughLineAggregator<>()); //will run toString
-        String outputPath = File.createTempFile("customerOutput", ".out").getAbsolutePath();
+        String outputPath = File.createTempFile("customerOutput", ".csv").getAbsolutePath();
         System.out.println("HEY! "+outputPath);
         writer.setResource(new FileSystemResource(outputPath));
         writer.afterPropertiesSet();
@@ -64,8 +64,8 @@ public class JobConfiguration {
     }
 
     @Bean
-    public Step mystep() throws Exception{
-        return stepBuilderFactory.get("mystep")
+    public Step mysteps11() throws Exception{
+        return stepBuilderFactory.get("mysteps11")
                 .<Customer,Customer>chunk(10)
                 .reader(reader())
                 .writer(writer())
@@ -75,7 +75,7 @@ public class JobConfiguration {
     @Bean
     public Job myJob() throws Exception{
         return jobBuilderFactory.get("myJob")
-                .start(mystep())
+                .start(mysteps11())
                 .build();
     }
 }
